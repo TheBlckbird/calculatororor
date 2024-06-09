@@ -1,6 +1,6 @@
 use crate::ast::{BinOp, Expr, UnOp};
 
-fn run(expr: Expr) -> f64 {
+pub fn run(expr: Expr) -> f64 {
     match expr {
         Expr::BinOp { left, right, op } => match op {
             BinOp::Add => run(*left) + run(*right),
