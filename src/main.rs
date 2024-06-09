@@ -1,3 +1,5 @@
+#![feature(let_chains)]
+
 use std::io::{stdin, stdout, Write};
 
 use parser::parse;

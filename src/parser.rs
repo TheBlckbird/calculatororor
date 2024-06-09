@@ -62,8 +62,15 @@ fn parse_bin_op(
     let op = match tokens[tokens.len() - *index - 1] {
         Token::Add => BinOp::Add,
         Token::Sub => {
-            let next_token = &tokens[tokens.len() - *index - 2];
-            if let Token::Number(_) = *next_token {
+            let maybe_next_token =
+                tokens.get((tokens.len() as isize - *index as isize - 2) as usize);
+
+            let next_token = match maybe_next_token {
+                Some(next_token) => next_token,
+                None => return Ok(Expr::UnOp(Box::new(right), UnOp::Neg)),
+            };
+
+            if let Token::Number(_) = next_token {
                 BinOp::Sub
             } else {
                 right = Expr::UnOp(Box::new(right), UnOp::Neg);
@@ -120,7 +127,7 @@ fn lexer(input: &str) -> Result<Vec<Token>, ()> {
                     tokens.push(token);
                 }
 
-                ' ' | '\n' => {}
+                ' ' | '\n' | '\r' => {}
                 _ => break Err(()),
             },
             None => break Ok(tokens),
